@@ -19,6 +19,9 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      - name: Install boost via brew
+        run: brew install boost
+
       - name: Install dependencies
         run: npm install
 
@@ -27,6 +30,8 @@ jobs:
           cd ios
           export COCOAPODS_DISABLE_STATS=true
           NO_FLIPPER=1 pod install --repo-update
+        env:
+          BOOST_ROOT: /opt/homebrew
 
       - name: Build iOS (unsigned)
         run: |
