@@ -1,0 +1,56 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install pods
+        run: |
+          cd ios
+          pod install
+
+      - name: Build iOS (unsigned)
+        run: |
+          xcodebuild \
+            -workspace ios/KitapAI.xcworkspace \
+            -scheme KitapAI \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath $RUNNER_TEMP/KitapAI.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            archive
+
+      - name: Export IPA
+        run: |
+          mkdir -p $RUNNER_TEMP/ipa
+          cd $RUNNER_TEMP/KitapAI.xcarchive/Products/Applications
+          mkdir -p Payload
+          cp -r KitapAI.app Payload/
+          zip -r $RUNNER_TEMP/ipa/kitap_ai.ipa Payload/
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: kitap_ai
+          path: ${{ runner.temp }}/ipa/kitap_ai.ipa
+          retention-days: 7
