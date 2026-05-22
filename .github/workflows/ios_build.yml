@@ -22,12 +22,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install pods
+       - name: Install pods
         run: |
           cd ios
-          pod install
-
-      - name: Build iOS (unsigned)
+          export COCOAPODS_DISABLE_STATS=true
+          pod install --repo-update
+        env:
+          SUPPRESS_BOOST_INSTALL: 1
+      
+       - name: Build iOS (unsigned)
         run: |
           xcodebuild \
             -workspace ios/KitapAI.xcworkspace \

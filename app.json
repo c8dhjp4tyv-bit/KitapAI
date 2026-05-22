@@ -1,4 +1,9 @@
 {
   "name": "KitapAI",
-  "displayName": "KitapAI"
+  "displayName": "KitapAI",
+  "extra": {
+    "eas": {
+      "projectId": "ba3abe10-774b-4895-8231-1d8e9f5dca0a"
+    }
+  }
 }
