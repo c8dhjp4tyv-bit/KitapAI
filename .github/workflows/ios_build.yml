@@ -22,6 +22,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Fix boost checksum
+        run: |
+          cd ios
+          sed -i '' 's/6478edfe2f3305127cffe8caf73ea0176c53769f4bf1585be237eb30798c3b8e/1c162b579a423fa6876c6c5bc16d39ab4bc05e28898977a0a6af345f523f6357/' ../node_modules/react-native/third-party-podspecs/boost.podspec
+
+
+       
       - name: Install pods
         run: |
           cd ios
